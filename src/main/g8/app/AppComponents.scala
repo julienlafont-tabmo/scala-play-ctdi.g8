@@ -12,6 +12,7 @@ import play.filters.gzip.GzipFilterComponents
 
 import controllers._
 import router.Routes
+import services._, impl._
 
 class AppComponents(context: Context) extends BuiltInComponentsFromContext(context)
     with AhcWSComponents
@@ -21,6 +22,8 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
 
   override lazy val httpFilters = Seq(securityHeadersFilter, corsFilter, gzipFilter)
 
-  val applicationController = new Application
+  val sampleService: SampleService = new SampleServiceImpl(wsClient)
+
+  val applicationController = new Application(sampleService)
   val router: Router = new Routes(httpErrorHandler, applicationController)
 }
